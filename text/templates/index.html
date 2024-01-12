@@ -1,0 +1,40 @@
+<!-- templates/index.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caesar Cipher</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Caesar Cipher</h1>
+    <form method="post" action="/">
+        <label for="file_path">File Path:</label>
+        <input type="text" name="file_path" required><br>
+
+        <label for="key">Key:</label>
+        <input type="number" name="key" required><br>
+
+        <label for="operation">Operation:</label>
+        <select name="operation" required>
+            <option value="encrypt">Encrypt</option>
+            <option value="decrypt">Decrypt</option>
+        </select><br>
+
+        <input type="submit" value="Submit">
+    </form>
+
+    {% if result_message %}
+    <div class="result-message">
+        <h2>{{ result_message }}</h2>
+    </div>
+    {% endif %}
+
+    {% if error %}
+        <h2 class="error">Error:</h2>
+        <p class="error">{{ error }}</p>
+    {% endif %}
+</body>
+</html>
