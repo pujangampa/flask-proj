@@ -1,50 +1,49 @@
-# app.py
-
 from flask import Flask, render_template, request
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
-def caesar_cipher(text, key, decrypt=False):
-    result = ""
+
+def caesar_encrypt(text, shift):
+    encrypted_text = ""
     for char in text:
         if char.isalpha():
-            shift = key % 26
             if char.isupper():
-                result += chr((ord(char) - shift - 65) % 26 + 65) if decrypt else chr((ord(char) + shift - 65) % 26 + 65)
+                encrypted_text += chr((ord(char) - 65 + shift) % 26 + 65)
             else:
-                result += chr((ord(char) - shift - 97) % 26 + 97) if decrypt else chr((ord(char) + shift - 97) % 26 + 97)
+                encrypted_text += chr((ord(char) - 97 + shift) % 26 + 97)
         else:
-            result += char
-    return result
+            encrypted_text += char
+    return encrypted_text
+
+def caesar_decrypt(text, shift):
+    decrypted_text = ""
+    for char in text:
+        if char.isalpha():
+            if char.isupper():
+                decrypted_text += chr((ord(char) - 65 - shift) % 26 + 65)
+            else:
+                decrypted_text += chr((ord(char) - 97 - shift) % 26 + 97)
+        else:
+            decrypted_text += char
+    return decrypted_text
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
-    result_message = None  # Initialize result_message
-
     if request.method == 'POST':
-        file_path = request.form['file_path']
-        key = int(request.form['key'])
-        operation = request.form['operation']
+        choice = request.form['choice']
+        shift = int(request.form['shift'])
+        text = request.form['text']
 
-        try:
-            with open(file_path, 'r') as file:
-                content = file.read()
-                if operation == 'encrypt':
-                    result = caesar_cipher(content, key)
-                    result_message = "File encrypted successfully"
-                elif operation == 'decrypt':
-                    result = caesar_cipher(content, key, decrypt=True)
-                    result_message = "File decrypted successfully"
-                else:
-                    return render_template('index.html', error="Invalid operation. Please choose encrypt or decrypt.")
+        if choice == 'encrypt':
+            result = caesar_encrypt(text, shift)
+        elif choice == 'decrypt':
+            result = caesar_decrypt(text, shift)
+        else:
+            result = 'Invalid choice. Please enter "encrypt" or "decrypt".'
 
-            with open(file_path, 'w') as file:
-                file.write(result)
+        return render_template('index.html', result=result)
 
-        except Exception as e:
-            return render_template('index.html', error=f"An error occurred: {str(e)}")
-
-    return render_template('index.html', result_message=result_message)
+    return render_template('index.html', result=None)
 
 if __name__ == '__main__':
     app.run(debug=True)
