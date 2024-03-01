@@ -1,5 +1,3 @@
-<!-- templates/index.html -->
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,31 +8,26 @@
 </head>
 <body>
     <h1>Caesar Cipher</h1>
+    
     <form method="post" action="/">
-        <label for="file_path">File Path:</label>
-        <input type="text" name="file_path" required><br>
-
-        <label for="key">Key:</label>
-        <input type="number" name="key" required><br>
-
-        <label for="operation">Operation:</label>
-        <select name="operation" required>
+        <label for="choice">Choose an option:</label>
+        <select name="choice" id="choice">
             <option value="encrypt">Encrypt</option>
             <option value="decrypt">Decrypt</option>
-        </select><br>
-
+        </select>
+        <br>
+        <label for="shift">Enter the key (an integer):</label>
+        <input type="number" name="shift" required>
+        <br>
+        <label for="text">Enter the text:</label>
+        <textarea name="text" rows="4" required></textarea>
+        <br>
         <input type="submit" value="Submit">
     </form>
 
-    {% if result_message %}
-    <div class="result-message">
-        <h2>{{ result_message }}</h2>
-    </div>
-    {% endif %}
-
-    {% if error %}
-        <h2 class="error">Error:</h2>
-        <p class="error">{{ error }}</p>
+    {% if result %}
+    <h2>Result:</h2>
+    <p>{{ result }}</p>
     {% endif %}
 </body>
 </html>
